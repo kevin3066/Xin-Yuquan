@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鑫玉全 | 陪伴五金產業升級的數位轉型夥伴</title>
+    <meta name="description" content="30年五金產業經驗結合數位科技，協助傳統五金企業從經驗管理走向智慧營運，實現數位轉型與品牌升級。">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js (for simple interactions) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563eb', // 深科技藍
+                            purple: '#7c3aed', // 智慧紫
+                            green: '#10b981', // 信任綠
+                            gray: '#f8fafc', // 暖灰背景
+                            dark: '#1e293b' // 穩重深色
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'hero-pattern': 'linear-gradient(to right bottom, rgba(248, 250, 252, 0.9), rgba(241, 245, 249, 0.8)), url("https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+                        'tech-grid': 'linear-gradient(to right, #e2e8f0 1px, transparent 1px), linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 120px;
+        }
+
+        section {
+            scroll-margin-top: 120px;
+        }
+
+        /* Custom Styles for Glassmorphism and specific effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            transition: all 0.4s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px 0 rgba(37, 99, 235, 0.1);
+            border-color: rgba(37, 99, 235, 0.2);
+        }
+
+        .hardware-card-image {
+            height: 420px;
+            object-fit: cover;
+            border-radius: 1.75rem 1.75rem 0 0;
+            display: block;
+            transition: transform 0.45s ease, filter 0.45s ease;
+        }
+
+        .hardware-card:hover .hardware-card-image {
+            transform: scale(1.08);
+            filter: saturate(1.05);
+        }
+
+        .hardware-card {
+            overflow: hidden;
+            border-radius: 1.75rem;
+        }
+
+        /* Typewriter Effect Cursor */
+        .cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Tech Particle Background Animation (CSS fallback) */
+        .tech-bg {
+            background-size: 40px 40px;
+            background-image: 
+                radial-gradient(circle at center, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
+        }
+
+        /* CTA Button Hover Effect */
+        .btn-consult {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-consult:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .nav-link.active {
+            color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -8px;
+            height: 2px;
+            border-radius: 9999px;
+            background: #2563eb;
+            animation: navPulse 0.45s ease-out;
+        }
+
+        @keyframes navPulse {
+            0% {
+                transform: scaleX(0.4);
+                opacity: 0.4;
+            }
+            100% {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+        }
+
+        /* Hide elements for GSAP scroll animation initially */
+        .gsap-reveal {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .policy-modal {
+            display: none;
+        }
+
+        .policy-modal.open {
+            display: flex;
+        }
+
+        .policy-modal-content {
+            max-height: 80vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+        }
+
+        .policy-modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .policy-modal-content::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.7);
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="font-sans text-brand-dark bg-brand-gray antialiased selection:bg-brand-blue selection:text-white" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
+
+    <!-- Navigation -->
+    <nav :class="{ 'bg-white/90 backdrop-blur-md shadow-sm py-4': scrolled, 'bg-transparent py-6': !scrolled }" 
+         class="fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3 group" aria-label="鑫玉全 官網首頁">
+                    <img src="./圖片/logo去背.png" alt="鑫玉全 Logo" class="h-16 w-16 object-contain bg-transparent p-0 shadow-none opacity-100" />
+                    <span class="font-bold text-2xl tracking-tight text-gray-900">鑫玉全</span>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link text-gray-600 hover:text-brand-blue font-medium transition-colors">我們是誰</a>
+                    <a href="#challenges" class="nav-link text-gray-600 hover:text-brand-blue font-medium transition-colors">產業挑戰</a>
+                    <a href="#solutions" class="nav-link text-gray-600 hover:text-brand-blue font-medium transition-colors">轉型方案</a>
+                    <a href="#why-us" class="nav-link text-gray-600 hover:text-brand-blue font-medium transition-colors">為何選擇我們</a>
+                    <a href="#hardware-purchase" class="nav-link text-gray-600 hover:text-brand-blue font-medium transition-colors">五金採購</a>
+                    <a href="#blog" class="nav-link text-gray-600 hover:text-brand-blue font-medium transition-colors">部落格</a>
+                    <a href="#contact" 
+                       class="btn-consult bg-brand-blue text-white px-6 py-2.5 rounded-full font-medium shadow-md hover:shadow-lg transition-all flex items-center space-x-2 group">
+                        <span>聯絡我們</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button (Alpine) -->
+                <div class="md:hidden flex items-center" x-data="{ open: false }">
+                    <button @click="open = !open" class="text-gray-600 hover:text-brand-blue focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6" x-show="!open"></i>
+                        <i data-lucide="x" class="w-6 h-6" x-show="open" x-cloak></i>
+                    </button>
+                    
+                    <!-- Mobile Dropdown -->
+                    <div x-show="open" @click.away="open = false" x-transition 
+                         class="absolute top-full left-0 w-full bg-white shadow-xl py-4 flex flex-col space-y-4 px-6">
+                        <a href="#about" @click="open = false" class="text-gray-800 font-medium py-2 border-b">我們是誰</a>
+                        <a href="#challenges" @click="open = false" class="text-gray-800 font-medium py-2 border-b">產業挑戰</a>
+                        <a href="#solutions" @click="open = false" class="text-gray-800 font-medium py-2 border-b">轉型方案</a>
+                        <a href="#why-us" @click="open = false" class="text-gray-800 font-medium py-2 border-b">為何選擇我們</a>
+                        <a href="#hardware-purchase" @click="open = false" class="text-gray-800 font-medium py-2 border-b">五金採購</a>
+                        <a href="#blog" @click="open = false" class="text-gray-800 font-medium py-2 border-b">部落格</a>
+                        <a href="#contact" class="bg-brand-blue text-white text-center px-6 py-3 rounded-md font-medium mt-4">聯絡我們</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Phase 2: UX資訊架構 - Hero Section -->
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-hero-pattern bg-cover bg-center">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
+        
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 right-10 w-64 h-64 bg-brand-blue/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 left-10 w-72 h-72 bg-brand-purple/10 rounded-full blur-3xl"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100 text-brand-blue px-4 py-1.5 rounded-full text-sm font-medium mb-6 gsap-reveal opacity-100 visibility-visible">
+                    <span class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
+                    <span>五金產業數位轉型領導品牌</span>
+                </div>
+                
+                <h1 class="font-bold text-gray-900 mb-6 tracking-tight leading-none h-auto min-h-0">
+                    <span id="typewriter" class="cursor inline-block whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-dark text-[1.8rem] sm:text-[2.5rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.5rem] leading-none"></span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl gsap-reveal font-medium">
+                    30年五金產業經驗 <span class="text-brand-purple">×</span> 數位科技工具，<br class="hidden md:block">
+                    協助傳統企業提升效率、傳承價值、創造下一代競爭力。
+                </p>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 gsap-reveal">
+                    <a href="#contact" 
+                       class="btn-consult inline-flex justify-center items-center px-8 py-4 bg-brand-blue text-white rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all w-full sm:w-auto">
+                        <span class="flex items-center">
+                            聯絡我們 / 立即諮詢 <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                        </span>
+                    </a>
+                    <a href="#about" class="inline-flex justify-center items-center px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-full font-bold text-lg hover:bg-gray-50 transition-all w-full sm:w-auto">
+                        了解我們
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logo Cloud (Trust Indicators) -->
+    <section class="py-10 border-y border-gray-200 bg-white/50 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-sm font-medium text-gray-500 mb-6 uppercase tracking-wider">陪伴無數工程業者與企業客戶成長</p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale">
+                <!-- Placeholder for client logos - using Lucide icons as mockups -->
+                <div class="flex items-center space-x-2"><i data-lucide="building-2" class="w-8 h-8"></i><span class="font-bold text-xl">營造工程</span></div>
+                <div class="flex items-center space-x-2"><i data-lucide="factory" class="w-8 h-8"></i><span class="font-bold text-xl">製造工廠</span></div>
+                <div class="flex items-center space-x-2"><i data-lucide="hard-hat" class="w-8 h-8"></i><span class="font-bold text-xl">機電維護</span></div>
+                <div class="flex items-center space-x-2"><i data-lucide="hammer" class="w-8 h-8"></i><span class="font-bold text-xl">裝修設計</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="gsap-reveal-left order-2 lg:order-1">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Abstract representation of hardware + tech -->
+                        <div class="aspect-w-4 aspect-h-3 bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Hardware Industry" class="object-cover w-full h-full mix-blend-multiply opacity-90">
+                            <!-- Overlay UI elements simulating tech -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-brand-blue/80 to-transparent mix-blend-overlay"></div>
+                            <div class="absolute bottom-6 left-6 right-6 p-6 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-white">
+                                <div class="flex items-center space-x-4 mb-4">
+                                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                        <i data-lucide="line-chart" class="w-6 h-6 text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-white/80">智慧管理分析</p>
+                                        <p class="font-bold text-xl">+45% 營運效率</p>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-white/20 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-brand-green w-3/4 h-full rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gsap-reveal-right order-1 lg:order-2">
+                    <div class="inline-flex items-center space-x-2 text-brand-blue font-medium mb-4">
+                        <span class="w-8 h-[2px] bg-brand-blue"></span>
+                        <span>關於我們</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                        一家懂五金、懂經營、<br>也懂未來的企業。
+                    </h2>
+                    
+                    <div class="space-y-6 text-lg text-gray-600">
+                        <p>
+                            鑫玉全從建築五金供應起步，30多年來陪伴無數工程業者與企業客戶成長。我們深知，五金產業靠的不只是商品，更重要的是<strong>經驗累積、客戶信任與供應能力</strong>。
+                        </p>
+                        <p>
+                            我們不是純粹販售系統的科技公司。我們是將數十年的「產業現場經驗」與「現代數位科技」結合，為傳統五金業者打造新世代智慧營運模式的轉型夥伴。
+                        </p>
+                        <p class="font-medium text-brand-dark border-l-4 border-brand-blue pl-4 py-1">
+                            懂產業的人，提供懂未來的解決方案。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Challenges Section -->
+    <section id="challenges" class="py-24 bg-brand-gray relative tech-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 gsap-reveal-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">傳統五金正在面對什麼挑戰？</h2>
+                <p class="text-lg text-gray-600">不論是經驗老道的創辦人，還是肩負重任的接班人，我們看見了您的痛點。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Challenge 1 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group gsap-reveal-up">
+                    <div class="w-14 h-14 bg-red-50 text-red-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="boxes" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">庫存管理困難</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">品項繁雜，依靠人工記憶，盤點耗時且容易發生缺貨或積壓資金的情況。</p>
+                </div>
+                
+                <!-- Challenge 2 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group gsap-reveal-up" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 bg-orange-50 text-orange-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="users" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">客戶資料流失</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">客戶關係掌握在老師傅手中，缺乏系統化紀錄，人員異動易造成業務斷層。</p>
+                </div>
+
+                <!-- Challenge 3 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group gsap-reveal-up" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 bg-yellow-50 text-yellow-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="trending-up" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">人力成本增加</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">日常行政與單據處理耗費大量人力，難以提升人均產值，且年輕人才招募不易。</p>
+                </div>
+
+                <!-- Challenge 4 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group gsap-reveal-up" style="transition-delay: 300ms;">
+                    <div class="w-14 h-14 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="git-merge" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">接班經營壓力</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">二代想導入新工具，卻面臨系統不符產業特性、上一代抗拒改變的兩難。</p>
+                </div>
+            </div>
+
+            <!-- Bridging the gap message -->
+            <div class="mt-20 bg-white rounded-3xl p-8 md:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between border-l-8 border-brand-purple gsap-reveal-up">
+                <div class="mb-6 md:mb-0 md:mr-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">經驗傳承</h3>
+                    <p class="text-lg text-gray-600">接班轉型不是對過去的否定，而是透過科技賦能，將長輩寶貴的實務經驗，轉化為可持續傳承的數位資產，讓企業價值延續到下一代。</p>
+                </div>
+                <div class="flex -space-x-4 items-center">
+                    <!-- More realistic, three-dimensional illustration of mentor and younger successor -->
+                    <div class="w-24 h-24 rounded-full border-4 border-white bg-[#e5e7eb] overflow-hidden z-20 shadow-sm">
+                        <svg viewBox="0 0 120 120" class="w-full h-full" aria-label="經驗者插畫">
+                            <defs>
+                                <linearGradient id="mentorBg" x1="0" x2="1" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#f3f4f6"/>
+                                    <stop offset="100%" stop-color="#d9dde3"/>
+                                </linearGradient>
+                                <radialGradient id="mentorFace" cx="50%" cy="35%" r="60%">
+                                    <stop offset="0%" stop-color="#f9d8bc"/>
+                                    <stop offset="100%" stop-color="#efba96"/>
+                                </radialGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="60" fill="url(#mentorBg)"/>
+                            <ellipse cx="60" cy="95" rx="28" ry="18" fill="rgba(0,0,0,0.08)"/>
+                            <circle cx="60" cy="34" r="15" fill="url(#mentorFace)"/>
+                            <path d="M45 32c3-12 9-18 15-18 9 0 16 7 18 18-4-3-8-5-14-5h-8c-4 0-8 1-11 5Z" fill="#3f3f46"/>
+                            <path d="M35 66c2-11 10-17 18-17h14c10 0 18 7 20 17l3 20H32l3-20Z" fill="#bcc5ce"/>
+                            <path d="M40 59h40c5 0 9 4 9 9v20H31V68c0-5 4-9 9-9Z" fill="#a6afb9"/>
+                            <path d="M36 70l-9 18M84 70l9 18" stroke="#8a929d" stroke-width="5" stroke-linecap="round"/>
+                            <circle cx="56" cy="36" r="1.5" fill="#2f2f2f"/>
+                            <circle cx="66" cy="36" r="1.5" fill="#2f2f2f"/>
+                            <path d="M56 43c2 3 6 3 8 0" stroke="#8b5e3d" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M47 81h26" stroke="#6b7280" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="w-24 h-24 rounded-full border-4 border-white bg-[#2563eb] overflow-hidden z-10 shadow-sm">
+                        <svg viewBox="0 0 120 120" class="w-full h-full" aria-label="年輕接班者插畫">
+                            <defs>
+                                <linearGradient id="nextGenBg" x1="0" x2="1" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#3d88ff"/>
+                                    <stop offset="100%" stop-color="#1d4ed8"/>
+                                </linearGradient>
+                                <radialGradient id="nextFace" cx="50%" cy="35%" r="60%">
+                                    <stop offset="0%" stop-color="#f7d9ba"/>
+                                    <stop offset="100%" stop-color="#f0b98f"/>
+                                </radialGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="60" fill="url(#nextGenBg)"/>
+                            <ellipse cx="60" cy="95" rx="28" ry="18" fill="rgba(0,0,0,0.12)"/>
+                            <circle cx="60" cy="34" r="15" fill="url(#nextFace)"/>
+                            <path d="M42 32c2-12 9-18 18-18 10 0 18 8 18 18-5-4-9-6-15-6h-6c-5 0-10 1-15 6Z" fill="#1f2937"/>
+                            <path d="M35 66c3-11 11-17 19-17h12c10 0 18 7 20 17l3 20H32l3-20Z" fill="#dbeafe"/>
+                            <path d="M40 60h40c6 0 11 5 11 11v19H29V71c0-6 5-11 11-11Z" fill="#9ec4ff"/>
+                            <path d="M36 70l-8 19M84 70l8 19" stroke="#7aaef7" stroke-width="5" stroke-linecap="round"/>
+                            <circle cx="55" cy="36" r="1.5" fill="#1f2937"/>
+                            <circle cx="65" cy="36" r="1.5" fill="#1f2937"/>
+                            <path d="M56 43c2 3 6 3 8 0" stroke="#8b5e3d" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M48 82h24" stroke="#1d4ed8" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section id="why-us" class="py-20 bg-slate-100 text-slate-900 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(#2563eb 1px, transparent 1px); background-size: 28px 28px;"></div>
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-100/30 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+                <div class="gsap-reveal-left">
+                    <div class="inline-flex items-center space-x-2 text-brand-blue font-medium mb-4">
+                        <span class="w-8 h-[2px] bg-brand-blue"></span>
+                        <span>品牌信任</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-3">為什麼選擇鑫玉全？</h2>
+                    <p class="text-lg text-slate-600 mb-6 border-l-4 border-brand-purple pl-4">
+                        因為我們懂你的痛，也知道路該怎麼走。
+                    </p>
+                    
+                    <div class="space-y-5">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-11 h-11 bg-white rounded-xl flex items-center justify-center border border-slate-200 shadow-sm">
+                                <span class="text-xl font-bold text-brand-green">30</span>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold mb-1">30年產業深耕經驗</h4>
+                                <p class="text-sm text-slate-600">我們不是憑空想像，而是從實際經營五金事業中累積出的智慧。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-11 h-11 bg-white rounded-xl flex items-center justify-center border border-slate-200 shadow-sm">
+                                <i data-lucide="wrench" class="w-5 h-5 text-brand-blue"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold mb-1">極度理解現場流程</h4>
+                                <p class="text-sm text-slate-600">從倉儲、採購到現場管理，我們知道真正影響效率的關鍵點在哪裡。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-11 h-11 bg-white rounded-xl flex items-center justify-center border border-slate-200 shadow-sm">
+                                <i data-lucide="heart-handshake" class="w-5 h-5 text-brand-purple"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold mb-1">有人陪伴的導入過程</h4>
+                                <p class="text-sm text-slate-600">一步步陪你從經驗模式進入數位化，讓轉型更穩、更安心。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative gsap-reveal-right flex items-center justify-center">
+                    <div class="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-lg">
+                        <div class="text-center mb-6">
+                            <h3 class="text-xl font-bold text-slate-900 mb-1">轉型成效預期</h3>
+                            <p class="text-slate-500 text-sm">基於導入 KMOS 之客戶平均數據</p>
+                        </div>
+                        
+                        <div class="space-y-5">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-700">庫存周轉率提升</span>
+                                    <span class="text-brand-green font-bold">+35%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-brand-green w-[75%] h-full"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-700">行政作業時間減少</span>
+                                    <span class="text-brand-blue font-bold">-40%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-brand-blue w-[80%] h-full"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-700">客戶回購率成長</span>
+                                    <span class="text-brand-purple font-bold">+25%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-brand-purple w-[60%] h-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 gsap-reveal-up">
+                <div class="inline-flex items-center space-x-2 text-brand-blue font-medium mb-4">
+                    <span class="w-8 h-[2px] bg-brand-blue"></span>
+                    <span>我們如何協助轉型</span>
+                    <span class="w-8 h-[2px] bg-brand-blue"></span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">陪伴五金產業升級的解決方案</h2>
+                <p class="text-lg text-gray-600">從內部營運到外部品牌，我們提供全方位的升級路徑。</p>
+            </div>
+
+            <!-- Solution 1: KMOS -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
+                <div class="order-2 lg:order-1 gsap-reveal-left">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">KMOS 智慧五金管理系統</h3>
+                    <p class="text-xl text-brand-blue font-medium mb-6">讓每天累積的營運經驗，變成企業可掌握的數據。</p>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        告別複雜難懂的傳統 ERP，KMOS 專為五金產業現場流程設計。介面直覺簡單，即使是不熟悉科技的老闆也能輕鬆上手。
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-blue"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h4 class="font-bold text-gray-900">商品與庫存管理</h4>
+                                <p class="text-sm text-gray-500">精準掌握每一件螺絲到大型機具的流向，不再憑感覺叫貨。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-blue"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h4 class="font-bold text-gray-900">採購與會員管理</h4>
+                                <p class="text-sm text-gray-500">自動化採購建議，並記錄每位客戶的偏好與交易歷史。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-blue"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h4 class="font-bold text-gray-900">視覺化銷售分析</h4>
+                                <p class="text-sm text-gray-500">圖表呈現營收狀況，輔助新一代管理者制定精準決策。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="order-1 lg:order-2 gsap-reveal-right relative">
+                    <!-- UI Mockup Graphic -->
+                    <div class="bg-gray-50 rounded-2xl p-6 shadow-xl border border-gray-100">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                        <!-- Dashboard UI Abstraction -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm">
+                                <div>
+                                    <div class="text-xs text-gray-400">本月營收</div>
+                                    <div class="text-xl font-bold text-gray-800">$1,245,000</div>
+                                </div>
+                                <div class="w-16 h-8 bg-green-50 rounded text-brand-green flex items-center justify-center text-xs font-bold">+12%</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white p-4 rounded-lg shadow-sm h-32 flex flex-col justify-between">
+                                    <div class="text-xs text-gray-400">熱銷品項分析</div>
+                                    <div class="w-full h-16 flex items-end space-x-2">
+                                        <div class="bg-blue-200 w-1/4 h-1/2 rounded-t"></div>
+                                        <div class="bg-blue-300 w-1/4 h-3/4 rounded-t"></div>
+                                        <div class="bg-brand-blue w-1/4 h-full rounded-t"></div>
+                                        <div class="bg-blue-400 w-1/4 h-2/3 rounded-t"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm h-32 flex flex-col justify-between">
+                                    <div class="text-xs text-gray-400">低庫存警示</div>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center"><span class="text-xs font-medium">門弓器</span><span class="w-2 h-2 rounded-full bg-red-500"></span></div>
+                                        <div class="flex justify-between items-center"><span class="text-xs font-medium">砂輪片</span><span class="w-2 h-2 rounded-full bg-red-500"></span></div>
+                                        <div class="flex justify-between items-center"><span class="text-xs font-medium">門鎖</span><span class="w-2 h-2 rounded-full bg-yellow-500"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative element -->
+                    <div class="absolute -z-10 top-1/2 right-0 transform translate-x-1/4 -translate-y-1/2 w-64 h-64 bg-brand-blue/10 rounded-full blur-3xl"></div>
+                </div>
+            </div>
+
+            <!-- Solution 2 & 3 Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Brand Upgrade -->
+                <div id="brand-upgrade" class="glass-card p-10 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 gsap-reveal-up">
+                    <div class="w-12 h-12 bg-purple-100 text-brand-purple rounded-xl flex items-center justify-center mb-6">
+                        <i data-lucide="layout-template" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">品牌數位升級</h3>
+                    <p class="text-gray-600 mb-6 h-20">讓老品牌被更多新世代客戶看見。我們協助建立專業形象網站，進行 Google 搜尋曝光與 SEO 內容優化，讓好口碑在數位世界上延續。</p>
+                    <ul class="space-y-2 text-sm font-medium text-gray-700">
+                        <li class="flex items-center"><i data-lucide="arrow-right" class="w-4 h-4 mr-2 text-brand-blue"></i> 企業形象網站建立</li>
+                        <li class="flex items-center"><i data-lucide="arrow-right" class="w-4 h-4 mr-2 text-brand-blue"></i> SEO 搜尋引擎優化</li>
+                        <li class="flex items-center"><i data-lucide="arrow-right" class="w-4 h-4 mr-2 text-brand-blue"></i> 專業數位社群經營</li>
+                    </ul>
+                </div>
+
+                <!-- Alliance -->
+                <div class="glass-card p-10 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 gsap-reveal-up" style="transition-delay: 100ms;">
+                    <div class="w-12 h-12 bg-green-100 text-brand-green rounded-xl flex items-center justify-center mb-6">
+                        <i data-lucide="network" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">五金產業聯盟</h3>
+                    <p class="text-gray-600 mb-6 h-20">單打獨鬥的時代已經過去。我們建立共好平台，串聯供應商、五金店家與品牌商，創造資源共享與協同合作的新商機。</p>
+                    <ul class="space-y-2 text-sm font-medium text-gray-700">
+                        <li class="flex items-center"><i data-lucide="arrow-right" class="w-4 h-4 mr-2 text-brand-blue"></i> 庫存資源整合</li>
+                        <li class="flex items-center"><i data-lucide="arrow-right" class="w-4 h-4 mr-2 text-brand-blue"></i> 聯合採購降低成本</li>
+                        <li class="flex items-center"><i data-lucide="arrow-right" class="w-4 h-4 mr-2 text-brand-blue"></i> 跨區客源引薦平台</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hardware Purchase Section -->
+    <section id="hardware-purchase" class="py-24 bg-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-slate-100"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 gsap-reveal-up">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-brand-blue font-medium text-sm mb-4">
+                    <span class="w-2 h-2 rounded-full bg-brand-blue mr-2"></span>
+                    建材與施工所需
+                </div>
+                <h2 class="text-3xl md:text-5xl font-black text-gray-900">五金採購</h2>
+                <p class="max-w-3xl mx-auto mt-4 text-lg text-gray-600">
+                    從門鎖、門弓器到各式建築五金與施工配件，我們提供穩定供應、專業建議與快速採購服務。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="hardware-card glass-card border border-gray-100 bg-white gsap-reveal-up" style="transition-delay: 0ms;">
+                    <img src="./五金採購/1.jpg" alt="五金配件" class="hardware-card-image w-full" />
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">五金配件</h3>
+                        <p class="text-gray-600 text-sm">含螺絲、鉸鏈、固定件、鎖具與施工配件，滿足各式現場採購與安裝需求。</p>
+                    </div>
+                </div>
+
+                <div class="hardware-card glass-card border border-gray-100 bg-white gsap-reveal-up" style="transition-delay: 100ms;">
+                    <img src="./五金採購/2.JPG" alt="鍛造門、房間門、淋浴門" class="hardware-card-image w-full" />
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">鍛造門 / 房間門 / 淋浴門</h3>
+                        <p class="text-gray-600 text-sm">提供安全耐用的門型產品，適用於住宅、商業空間與衛浴工程需求。</p>
+                    </div>
+                </div>
+
+                <div class="hardware-card glass-card border border-gray-100 bg-white gsap-reveal-up" style="transition-delay: 200ms;">
+                    <img src="./五金採購/3.jpg" alt="鋸片研磨" class="hardware-card-image w-full" />
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">氬焊機 / 圓鋸機 / 鋸片研磨</h3>
+                        <p class="text-gray-600 text-sm">涵蓋金屬加工與施工所需的機械設備及275、300鋸片販售及研磨，支援高效率生產與現場作業。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-24 bg-brand-gray relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50/60 via-white to-slate-100/80"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 gsap-reveal-up">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-brand-blue font-medium text-sm mb-4">
+                    <span class="w-2 h-2 rounded-full bg-brand-blue mr-2"></span>
+                    最新動態與活動分享
+                </div>
+                <h2 class="text-3xl md:text-5xl font-black text-gray-900">部落格</h2>
+                <p class="max-w-3xl mx-auto mt-4 text-lg text-gray-600">
+                    分享我們參與的活動、媒體採訪與專業課程，讓更多人看見五金產業與數位轉型的精彩連結。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <article class="glass-card overflow-hidden rounded-3xl bg-white">
+                    <img src="./圖片/創業小聚採訪%20.jpg" alt="創業小聚採訪" class="h-56 w-full object-cover" loading="lazy" />
+                    <div class="p-6">
+                        <p class="text-sm font-medium text-brand-blue mb-3">創業小聚採訪</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">創業小聚採訪</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">記錄企業與創業夥伴交流的珍貴時刻，分享實務經驗與未來發展方向。</p>
+                    </div>
+                </article>
+
+                <article class="glass-card overflow-hidden rounded-3xl bg-white">
+                    <img src="./圖片/屏東新聞採訪.jpg" alt="屏東新聞採訪" class="h-56 w-full object-cover" loading="lazy" />
+                    <div class="p-6">
+                        <p class="text-sm font-medium text-brand-blue mb-3">屏東新聞採訪</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">屏東新聞採訪</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">透過新聞採訪，讓更多人了解鑫玉全在地方產業與數位轉型上的努力與成果。</p>
+                    </div>
+                </article>
+
+                <article class="glass-card overflow-hidden rounded-3xl bg-white">
+                    <img src="./圖片/2026%20Meet%20Greater%20South%20亞灣新創大南方｜8.28-8.29%20高雄.jpg" alt="2026 Meet Greater South 亞灣新創大南方｜8.28-8.29 高雄" class="h-56 w-full object-cover" loading="lazy" />
+                    <div class="p-6">
+                        <p class="text-sm font-medium text-brand-blue mb-3">2026 Meet Greater South 亞灣新創大南方｜8.28-8.29 高雄</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">2026 Meet Greater South 亞灣新創大南方｜8.28-8.29 高雄</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">參與高雄重要創新交流活動，拓展新創與產業合作的可能性。</p>
+                    </div>
+                </article>
+
+                <article class="glass-card overflow-hidden rounded-3xl bg-white">
+                    <img src="./圖片/永續影響力學院.jpg" alt="永續影響力學院" class="h-56 w-full object-cover" loading="lazy" />
+                    <div class="p-6">
+                        <p class="text-sm font-medium text-brand-blue mb-3">永續影響力學院</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">永續影響力學院</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">持續學習與實踐永續價值，將影響力帶入企業與社會共好。</p>
+                    </div>
+                </article>
+
+                <article class="glass-card overflow-hidden rounded-3xl bg-white">
+                    <img src="./圖片/Google%20商家優化課程.JPG" alt="Google 商家優化課程" class="h-56 w-full object-cover" loading="lazy" />
+                    <div class="p-6">
+                        <p class="text-sm font-medium text-brand-blue mb-3">Google 商家優化課程</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Google 商家優化課程</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">學習商家曝光與數位行銷技巧，提升品牌在 Google 上的可見度與信任感。</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-[0.95fr_1.25fr] gap-10 items-start">
+                <div class="bg-gray-50 border border-gray-200 rounded-3xl p-8 lg:p-10 shadow-sm">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-6">與我們取得聯繫：</h3>
+                    <div class="space-y-4 text-base text-gray-700">
+                        <div class="flex items-start">
+                            <span class="font-semibold text-gray-900 min-w-[88px]">聯絡信箱：</span>
+                            <a href="mailto:kevin0698118@gmail.com" class="text-brand-blue hover:underline break-all">kevin0698118@gmail.com</a>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="font-semibold text-gray-900 min-w-[88px]">電話：</span>
+                            <span>(08)755-4263 &nbsp; M : 0928806923</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="font-semibold text-gray-900 min-w-[88px]">地址：</span>
+                            <span>900 屏東市建國路211號</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="font-semibold text-gray-900 min-w-[88px]">統編：</span>
+                            <span>99996056</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-3xl p-8 lg:p-10 shadow-sm">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-8">聯絡我們：</h3>
+                    <form id="contactForm" class="space-y-5" method="POST" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfzaKF5OJ3LCF0MMRZB05UFDuvvh-6f-Aqeli3yZ1Ymeep9rQ/formResponse" target="google-form-submit-frame">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">您的姓名/稱呼</label>
+                            <input type="text" name="entry.588998168" class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-blue-100" placeholder="請輸入您的姓名或稱呼" required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">聯絡電子信箱</label>
+                            <input type="email" name="entry.476214014" class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-blue-100" placeholder="example@email.com" required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">您的需求</label>
+                            <select name="entry.1610329698" class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-blue-100" required>
+                                <option value="傳產轉型">傳產轉型</option>
+                                <option value="數位行銷">數位行銷</option>
+                                <option value="KMOS ERP系統">KMOS ERP系統</option>
+                                <option value="五金聯盟">五金聯盟</option>
+                                <option value="採購需求">採購需求</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">需求簡介</label>
+                            <textarea name="entry.1646642689" rows="5" class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-blue-100" placeholder="詳細文字" required></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">適合聯絡的時間</label>
+                            <select name="entry.1091995575" class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-blue-100" required>
+                                <option value="週一到週五平日（10:00-19:00）">週一到週五平日（10:00-19:00）</option>
+                                <option value="週末假日（可提前預約）">週末假日（可提前預約）</option>
+                                <option value="晚上 19:00 之後（另約）">晚上 19:00 之後（另約）</option>
+                                <option value="其他時間，請備註">其他時間，請備註</option>
+                            </select>
+                            <p class="mt-2 text-xs text-gray-500">營業時間：早上 10:00 ～ 晚上 19:00</p>
+                        </div>
+
+                        <button type="submit" class="inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-3 text-base font-semibold text-white shadow-md transition hover:bg-brand-purple">
+                            送出需求
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="./圖片/logo.png" alt="鑫玉全 Logo" class="h-10 w-10 object-contain bg-transparent p-0 opacity-100" />
+                        <span class="font-bold text-xl text-white">鑫玉全</span>
+                    </div>
+                    <p class="text-sm leading-relaxed max-w-sm">
+                        懂產業的人，提供懂未來的解決方案。<br>
+                        致力成為五金產業數位轉型的最佳夥伴。
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4">快速連結</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#about" class="hover:text-white transition-colors">關於我們</a></li>
+                        <li><a href="#solutions" class="hover:text-white transition-colors">KMOS 系統</a></li>
+                        <li><a href="#brand-upgrade" class="hover:text-white transition-colors">品牌升級</a></li>
+                        <li><a href="#why-us" class="hover:text-white transition-colors">為何選擇我們</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4">聯絡我們</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><i data-lucide="mail" class="w-4 h-4 mr-2"></i> kevin0698118@gmail.com</li>
+                        <li class="flex items-center"><i data-lucide="phone" class="w-4 h-4 mr-2"></i> (08)755-4263 / M : 0928806923</li>
+                        <li class="flex items-start"><i data-lucide="map-pin" class="w-4 h-4 mr-2 mt-0.5"></i> 900 屏東市建國路211號</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-800 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2026 鑫玉全 Xin Yu Quan. All rights reserved.</p>
+                <div class="mt-4 md:mt-0 space-x-4">
+                    <button type="button" data-open-policy="privacy" class="hover:text-white transition-colors text-left">隱私權政策</button>
+                    <button type="button" data-open-policy="terms" class="hover:text-white transition-colors text-left">服務條款</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="privacyPolicyModal" class="policy-modal fixed inset-0 z-[120] items-center justify-center bg-black/50 p-4">
+        <div class="policy-modal-content w-full max-w-3xl rounded-3xl bg-white p-6 md:p-8 shadow-2xl">
+            <div class="flex items-start justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-sm font-semibold text-brand-blue mb-1">鑫玉全</p>
+                    <h3 class="text-2xl font-bold text-gray-900">隱私權政策</h3>
+                </div>
+                <button type="button" class="close-policy-modal rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 transition-colors" aria-label="關閉">✕</button>
+            </div>
+
+            <div class="space-y-5 text-sm leading-7 text-gray-700">
+                <p>鑫玉全（以下簡稱「本公司」）重視個人資料保護，並致力於維護您在使用本網站、填寫聯絡表單、申請採購資訊或其他服務時所提供之資料安全。</p>
+                <p>本政策說明本公司如何蒐集、處理、保存及保護您的個人資料，並提供您有關個人資料權利之相關資訊。</p>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">一、蒐集之個人資料範圍</h4>
+                    <p>當您使用本網站聯絡本公司、預約諮詢、提出採購需求或填寫表單時，本公司可能蒐集以下資訊：</p>
+                    <ul class="list-disc pl-6 mt-2 space-y-1">
+                        <li>姓名、公司名稱、職稱</li>
+                        <li>聯絡電話、電子郵件地址</li>
+                        <li>需求內容、採購項目、聯絡時間</li>
+                        <li>其他您主動提供之必要資訊</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">二、資料使用目的</h4>
+                    <p>本公司蒐集之個人資料僅限於以下目的：</p>
+                    <ol class="list-decimal pl-6 mt-2 space-y-1">
+                        <li>回覆來函、詢問及採購需求</li>
+                        <li>提供產品資訊、服務說明與後續聯繫</li>
+                    </ol>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">三、資料保存與安全維護</h4>
+                    <p>本公司採取必要且合理之安全措施，保護您的個人資料免於未經授權之存取、使用、修改、揭露或破壞。除依法令規定或為執行業務所需外，本公司將於適當期間內保存資料，並依相關程序進行刪除或銷毀。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">四、第三方服務</h4>
+                    <p>為提供聯絡與表單服務，本網站可能透過第三方平台（例如 Google 表單）處理您的資料。該平台依其隱私權政策蒐集與保存資料。本公司僅在必要範圍內提供必要資訊，並要求第三方遵循相關法令及保護標準。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">五、您的權利</h4>
+                    <p>您得依法向本公司請求查詢、閱覽、補充、更正、停止處理或刪除個人資料。若您希望行使相關權利，請透過網站提供之聯絡方式與本公司聯繫。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">六、政策修訂</h4>
+                    <p>本公司保留修訂本政策之權利，必要時將於本網站公告更新內容。若政策內容有重大變更，本公司將另行通知。</p>
+                </div>
+
+                <p class="font-medium text-gray-900">最後更新日期：2026 年 8 月 1 日</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="termsPolicyModal" class="policy-modal fixed inset-0 z-[120] items-center justify-center bg-black/50 p-4">
+        <div class="policy-modal-content w-full max-w-3xl rounded-3xl bg-white p-6 md:p-8 shadow-2xl">
+            <div class="flex items-start justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-sm font-semibold text-brand-blue mb-1">鑫玉全</p>
+                    <h3 class="text-2xl font-bold text-gray-900">服務條款</h3>
+                </div>
+                <button type="button" class="close-policy-modal rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 transition-colors" aria-label="關閉">✕</button>
+            </div>
+
+            <div class="space-y-5 text-sm leading-7 text-gray-700">
+                <p>歡迎使用鑫玉全網站（以下簡稱「本網站」）。在使用本網站前，請詳閱以下服務條款。使用本網站即表示您已充分理解並同意遵守本條款之規定。</p>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">一、網站內容與資訊</h4>
+                    <p>本網站提供之資訊、內容、圖片、文字、產品說明及服務內容，僅供參考及一般資訊使用。本公司保留於任何時間修正、更新、暫停或終止網站內容之權利，且不保證資訊之即時性、完整性或精確性。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">二、使用規範</h4>
+                    <p>使用者同意不得利用本網站從事任何違反法令、侵害第三人權益、干擾網站正常運作或其他不當行為，包含但不限於：</p>
+                    <ul class="list-disc pl-6 mt-2 space-y-1">
+                        <li>傳輸惡意程式、病毒或其他違法內容</li>
+                        <li>冒用他人身分或資料</li>
+                        <li>干擾網站伺服器、系統或連線功能</li>
+                        <li>未經授權蒐集、複製、散布或使用網站內容</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">三、聯絡與諮詢服務</h4>
+                    <p>本網站提供聯絡表單、採購需求及預約諮詢服務。使用者可透過本網站提出需求，但實際服務內容、時程、報價及合作安排，將依雙方後續確認結果為準。本公司保留接受、拒絕、調整或終止相關服務之權利。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">四、智慧財產權</h4>
+                    <p>本網站中所有文字、圖片、設計、標識、程式碼及其他資料之智慧財產權，均屬本公司或合法授權者所有。除非另有明示，未經授權不得重製、公開傳輸、販售或從事商業利用。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">五、免責聲明</h4>
+                    <p>本公司不保證本網站完全無錯誤、不中斷或免於病毒、惡意程式或其他技術風險之影響。對於因使用本網站而產生之任何損失、延誤、資料遺失或其他直接或間接損害，本公司不負任何責任，除法律明文規定者外。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">六、條款修訂</h4>
+                    <p>本公司保留修訂本服務條款之權利，修訂內容將公告於本網站。您於修訂後繼續使用本網站，即視為已接受修訂後之條款。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2">七、準據法與管轄</h4>
+                    <p>本條款依中華民國法律解釋及適用，如因本條款產生任何爭議，雙方應先以誠意協商解決；協商不成時，雙方同意以台灣屏東地方法院為第一審管轄法院。</p>
+                </div>
+
+                <p class="font-medium text-gray-900">最後更新日期：2026 年 8 月 1 日</p>
+            </div>
+        </div>
+    </div>
+
+    <iframe id="googleFormSubmitFrame" name="google-form-submit-frame" style="display:none;" title="Google Form hidden submit iframe"></iframe>
+
+    <div id="contactSuccessModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/30 backdrop-blur-sm">
+        <div class="w-[90%] max-w-md rounded-2xl bg-white p-8 text-center shadow-2xl">
+            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600">
+                <i data-lucide="check" class="w-7 h-7"></i>
+            </div>
+            <h4 class="text-xl font-bold text-gray-900 mb-2">需求已送出</h4>
+            <p class="text-gray-600">我們將盡快與您聯絡！</p>
+            <button id="closeContactSuccessModal" class="mt-6 inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-purple transition-colors">
+                確認
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Highlight current navigation section with subtle active state
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = [...document.querySelectorAll('section[id]')];
+
+        function setActiveNavLink() {
+            const scrollPosition = window.scrollY + 150;
+            let currentId = 'about';
+
+            sections.forEach((section) => {
+                if (scrollPosition >= section.offsetTop) {
+                    currentId = section.id;
+                }
+            });
+
+            navLinks.forEach((link) => {
+                const isActive = link.getAttribute('href') === `#${currentId}`;
+                link.classList.toggle('active', isActive);
+                link.classList.toggle('text-brand-blue', isActive);
+                link.classList.toggle('text-gray-600', !isActive);
+            });
+        }
+
+        window.addEventListener('scroll', setActiveNavLink, { passive: true });
+        setActiveNavLink();
+
+        // Contact form submit to Google Form in background without redirect
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('contactForm');
+            const modal = document.getElementById('contactSuccessModal');
+            const closeButton = document.getElementById('closeContactSuccessModal');
+            const submitButton = form ? form.querySelector('button[type="submit"]') : null;
+            const iframe = document.getElementById('googleFormSubmitFrame');
+
+            const policyButtons = document.querySelectorAll('[data-open-policy]');
+            const policyModals = {
+                privacy: document.getElementById('privacyPolicyModal'),
+                terms: document.getElementById('termsPolicyModal')
+            };
+
+            function openPolicyModal(type) {
+                const targetModal = policyModals[type];
+                if (!targetModal) return;
+                targetModal.classList.add('open');
+                targetModal.classList.add('flex');
+            }
+
+            function closePolicyModal(type) {
+                const targetModal = policyModals[type];
+                if (!targetModal) return;
+                targetModal.classList.remove('open');
+                targetModal.classList.remove('flex');
+            }
+
+            policyButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const type = button.getAttribute('data-open-policy');
+                    openPolicyModal(type);
+                });
+            });
+
+            document.querySelectorAll('.close-policy-modal').forEach(function(closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    Object.keys(policyModals).forEach(function(type) {
+                        closePolicyModal(type);
+                    });
+                });
+            });
+
+            Object.keys(policyModals).forEach(function(type) {
+                const targetModal = policyModals[type];
+                if (!targetModal) return;
+                targetModal.addEventListener('click', function(event) {
+                    if (event.target === targetModal) {
+                        closePolicyModal(type);
+                    }
+                });
+            });
+
+            function showSuccessModal() {
+                if (!modal) return;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            function hideSuccessModal() {
+                if (!modal) return;
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+
+            if (closeButton) {
+                closeButton.addEventListener('click', hideSuccessModal);
+            }
+
+            if (modal) {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        hideSuccessModal();
+                    }
+                });
+            }
+
+            if (form && iframe) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.textContent = '送出中...';
+                    }
+
+                    iframe.onload = function() {
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                            submitButton.textContent = '送出需求';
+                        }
+                        form.reset();
+                        showSuccessModal();
+                    };
+
+                    form.submit();
+                });
+            }
+
+            // Typewriter Effect
+            const text = "讓五金產業，從經驗走向智慧";
+            const typewriterElement = document.getElementById('typewriter');
+            let i = 0;
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    typewriterElement.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100); // Speed of typing
+                }
+            }
+            
+            // Start typing slightly after page load
+            setTimeout(typeWriter, 500);
+
+            // GSAP Scroll Animations
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Elements Reveal
+            gsap.fromTo(".gsap-reveal", 
+                { y: 30, opacity: 0, visibility: "hidden" },
+                { y: 0, opacity: 1, visibility: "visible", duration: 0.8, stagger: 0.2, ease: "power2.out" }
+            );
+
+            // Scroll Up Elements
+            gsap.utils.toArray('.gsap-reveal-up').forEach(function(elem) {
+                gsap.fromTo(elem,
+                    { y: 50, opacity: 0 },
+                    { 
+                        y: 0, 
+                        opacity: 1, 
+                        duration: 0.8, 
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: elem,
+                            start: "top 85%", // Trigger when top of element hits 85% of viewport height
+                            toggleActions: "play none none none"
+                        }
+                    }
+                );
+            });
+
+            // Scroll Left Elements
+            gsap.utils.toArray('.gsap-reveal-left').forEach(function(elem) {
+                gsap.fromTo(elem,
+                    { x: -50, opacity: 0 },
+                    { 
+                        x: 0, 
+                        opacity: 1, 
+                        duration: 0.8, 
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: elem,
+                            start: "top 80%",
+                        }
+                    }
+                );
+            });
+
+            // Scroll Right Elements
+            gsap.utils.toArray('.gsap-reveal-right').forEach(function(elem) {
+                gsap.fromTo(elem,
+                    { x: 50, opacity: 0 },
+                    { 
+                        x: 0, 
+                        opacity: 1, 
+                        duration: 0.8, 
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: elem,
+                            start: "top 80%",
+                        }
+                    }
+                );
+            });
+        });
+    </script>
+</body>
+</html>
